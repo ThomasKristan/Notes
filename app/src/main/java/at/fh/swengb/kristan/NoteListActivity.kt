@@ -63,6 +63,8 @@ class NoteListActivity : AppCompatActivity() {
                 val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
                 sharedPreferences.edit().clear().apply()
                 NoteRepository.clearDb(this)
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
                 finish()
                 true}
             R.id.newnote -> {

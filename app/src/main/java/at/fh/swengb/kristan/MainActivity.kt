@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         else{
             val intent = Intent(this, NoteListActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         login_button.setOnClickListener {
@@ -58,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                         //Log.e("Token", it.token)
                         val intent = Intent(this, NoteListActivity::class.java)
                         startActivity(intent)
-
+                        finish()
                     },
                     error = {
                     }
