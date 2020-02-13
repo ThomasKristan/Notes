@@ -11,24 +11,22 @@ class NoteAdapter(val clickListener: (note: Note) -> Unit): RecyclerView.Adapter
 
     private var noteList = listOf<Note>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val noteItemView = inflater.inflate(R.layout.item_note, parent, false)
-        return NoteViewHolder(noteItemView, clickListener)
+    override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
+        holder.bindItem(noteList[position])
     }
 
     override fun getItemCount(): Int {
         return noteList.count()
     }
 
-    override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        holder.bindItem(noteList[position])
-    }
-
-
     fun updateList(newList: List<Note>) {
         noteList = newList
         notifyDataSetChanged()
+    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val noteItemView = inflater.inflate(R.layout.item_note, parent, false)
+        return NoteViewHolder(noteItemView, clickListener)
     }
 }
 

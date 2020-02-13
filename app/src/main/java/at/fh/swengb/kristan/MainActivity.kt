@@ -14,6 +14,27 @@ class MainActivity : AppCompatActivity() {
     companion object{
         val TOKEN = "TOKEN"
     }
+    fun login (
+        request: AuthRequest,
+        success: (response: AuthResponse) -> Unit,
+        error: (errorMessage: String) -> Unit) {
+        NoteApi.retrofitService.login(request).enqueue(object: retrofit2.Callback<AuthResponse>{
+            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
+                error("Failed to log in.")
+            }
+
+            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
+                val responseBody = response.body()
+                if (response.isSuccessful && responseBody != null) {
+                    success(responseBody)
+                }
+                else {
+                    error("We've got an error.")
+                }
+
+            }
+        })
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -40,7 +61,6 @@ class MainActivity : AppCompatActivity() {
 
                     },
                     error = {
-                        Log.e("Error", it)
                     }
                 )
             }
@@ -50,25 +70,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun login (
-        request: AuthRequest,
-        success: (response: AuthResponse) -> Unit,
-        error: (errorMessage: String) -> Unit) {
-        NoteApi.retrofitService.login(request).enqueue(object: retrofit2.Callback<AuthResponse>{
-            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-                error("Failed to log in.")
-            }
 
-            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-                val responseBody = response.body()
-                if (response.isSuccessful && responseBody != null) {
-                    success(responseBody)
-                }
-                else {
-                    error("We've got an error.")
-                }
-
-            }
-        })
-    }
 }

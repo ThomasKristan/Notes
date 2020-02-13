@@ -12,15 +12,13 @@ object NoteRepository {
         NoteApi.retrofitService.notes(token, lastSync).enqueue(object : Callback<NotesResponse> {
 
             override fun onFailure(call: Call<NotesResponse>, t: Throwable) {
-                error("The call failed")
+                error("Call failed")
             }
 
             override fun onResponse(call: Call<NotesResponse>, response: Response<NotesResponse>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     success(responseBody)
-                } else {
-                    error("Something went wrong")
                 }
             }
         })
@@ -31,15 +29,13 @@ object NoteRepository {
             Callback<Note> {
 
             override fun onFailure(call: Call<Note>, t: Throwable) {
-                error("The call failed! " + t.localizedMessage)
+                error("Call failed! " + t.localizedMessage)
             }
 
             override fun onResponse(call: Call<Note>, response: Response<Note>) {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     success(responseBody)
-                } else {
-                    error("Something went wrong " + response.message())
                 }
             }
         })
@@ -50,14 +46,14 @@ object NoteRepository {
         db.NoteDao.insert(newNote)
     }
 
-    fun getNoteById (context: Context, id: String):Note {
-        val db = NoteDatabase.getDatabase(context)
-        return db.NoteDao.findNoteById(id)
-    }
-
     fun getNotesAll (context: Context):List<Note> {
         val db = NoteDatabase.getDatabase(context)
         return db.NoteDao.getNotesAll()
+    }
+
+    fun getNoteById (context: Context, id: String):Note {
+        val db = NoteDatabase.getDatabase(context)
+        return db.NoteDao.findNoteById(id)
     }
 
     fun clearDb (context: Context) {

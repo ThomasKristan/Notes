@@ -21,7 +21,7 @@ class NoteListActivity : AppCompatActivity() {
         val EXTRA_ADDED_OR_EDITED_RESULT = 0
     }
     val noteAdapter = NoteAdapter(){
-        val intent = Intent(this, AddEditNoteActivity::class.java)
+        val intent = Intent(this, newNotesActivity::class.java)
         intent.putExtra(NOTEID, it.id)
         startActivityForResult(intent, EXTRA_ADDED_OR_EDITED_RESULT)
     }
@@ -44,7 +44,6 @@ class NoteListActivity : AppCompatActivity() {
                     noteAdapter.updateList(NoteRepository.getNotesAll(this))
                 },
                 error = {
-                    Log.e("Error", it)
                     noteAdapter.updateList(NoteRepository.getNotesAll(this))
                 })
             note_recycler_view.layoutManager = StaggeredGridLayoutManager(2,1)
@@ -53,10 +52,10 @@ class NoteListActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu,menu)
-        return true
+    override fun onResume() {
+        super.onResume()
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item?.itemId) {
@@ -68,7 +67,7 @@ class NoteListActivity : AppCompatActivity() {
                 true}
             R.id.newnote -> {
                 val uuidString = UUID.randomUUID().toString()
-                val intent = Intent(this, AddEditNoteActivity::class.java)
+                val intent = Intent(this, newNotesActivity::class.java)
                 intent.putExtra(NOTEID, uuidString)
                 startActivityForResult(intent, EXTRA_ADDED_OR_EDITED_RESULT)
                 true}
@@ -76,9 +75,6 @@ class NoteListActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -91,4 +87,9 @@ class NoteListActivity : AppCompatActivity() {
             note_recycler_view.adapter = noteAdapter
         }
     }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu,menu)
+        return true
+    }
+
 }

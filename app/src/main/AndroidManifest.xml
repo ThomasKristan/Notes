@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="at.fh.swengb.kristan">
 
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -13,10 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="at.fh.swengb.kristan.AddEditNoteActivity"
-            android:parentActivityName="at.fh.swengb.kristan.NoteListActivity" />
-        <activity android:name="at.fh.swengb.kristan.NoteListActivity" />
-        <activity android:name="at.fh.swengb.kristan.MainActivity">
+        <activity
+            android:name=".newNotesActivity"
+            android:parentActivityName=".NoteListActivity" />
+        <activity android:name=".NoteListActivity" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

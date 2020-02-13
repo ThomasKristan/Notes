@@ -8,29 +8,14 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_add_edit_note.*
+import kotlinx.android.synthetic.main.activity_new_notes.*
 
 
-class AddEditNoteActivity : AppCompatActivity() {
+class newNotesActivity : AppCompatActivity() {
 
     companion object {
         val EXTRA_ADDED_OR_EDITED_RESULT = "ADD_OR_EDITED_RESULT"
         val TOKEN = "TOKEN"
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_edit_note)
-
-        val extra: String? = intent.getStringExtra(NoteListActivity.NOTEID)
-
-        if(extra != null){
-            val note:Note? = NoteRepository.getNoteById(this, extra)
-            if(note != null) {
-                add_edit_title.setText(note.title)
-                add_edit_text.setText(note.text)
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -60,7 +45,6 @@ class AddEditNoteActivity : AppCompatActivity() {
                             NoteRepository.addNote(this, it)
                         },
                         error = {
-                            Log.e("Upload", it)
                         })
 
                     val resultIntent = intent
@@ -75,6 +59,20 @@ class AddEditNoteActivity : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_new_notes)
+
+        val extra: String? = intent.getStringExtra(NoteListActivity.NOTEID)
+
+        if(extra != null){
+            val note:Note? = NoteRepository.getNoteById(this, extra)
+            if(note != null) {
+                add_edit_title.setText(note.title)
+                add_edit_text.setText(note.text)
+            }
         }
     }
 }
