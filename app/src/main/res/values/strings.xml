@@ -10,4 +10,5 @@
     <string name="note_content">Content</string>
     <string name="fill_message">At least one field must be filled!</string>
     <string name="login_info_missing_message">Username and password required!</string>
+    <string name="note_sync_failed">Syncing failed.</string>
 </resources>

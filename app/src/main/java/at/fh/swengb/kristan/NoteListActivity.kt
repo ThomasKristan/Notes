@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import kotlinx.android.synthetic.main.activity_note_list.*
 import java.util.*
@@ -30,27 +31,9 @@ class NoteListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_note_list)
-
-        val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString(TOKEN, null)
-        val lastSync = sharedPreferences.getLong(LASTSYNC, 0)
-        if (token != null){
-            NoteRepository.getNotes(
-                token,
-                lastSync,
-                success = {
-                    it.notes.map { NoteRepository.addNote(this, it) }
-                    sharedPreferences.edit().putLong(LASTSYNC, it.lastSync).apply()
-                    noteAdapter.updateList(NoteRepository.getNotesAll(this))
-                },
-                error = {
-                    noteAdapter.updateList(NoteRepository.getNotesAll(this))
-                })
-            note_recycler_view.layoutManager = StaggeredGridLayoutManager(2,1)
-            note_recycler_view.adapter = noteAdapter
-
-        }
+        noteSync()
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -59,6 +42,10 @@ class NoteListActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item?.itemId) {
+            R.id.sync_notes -> {
+                noteSync()
+                true
+            }
             R.id.logout -> {
                 val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
                 sharedPreferences.edit().clear().apply()
@@ -80,18 +67,41 @@ class NoteListActivity : AppCompatActivity() {
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        // Check if the ActivityResult matches our ADD_OR_RATING_REQUEST sent with the intent that starts
-        // the LessonRatingActivity
-        Log.e("ACTIVITY_RESULT","Resulted Activity")
         if (requestCode == EXTRA_ADDED_OR_EDITED_RESULT  && resultCode == Activity.RESULT_OK){
-            noteAdapter.updateList(NoteRepository.getNotesAll(this))
-            note_recycler_view.layoutManager = StaggeredGridLayoutManager(2,1)
-            note_recycler_view.adapter = noteAdapter
+            noteSync()
         }
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu,menu)
         return true
+    }
+
+    private fun noteSync() {
+
+        note_recycler_view.layoutManager = StaggeredGridLayoutManager(2,1)
+        note_recycler_view.adapter = noteAdapter
+
+        val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
+        val accessToken = sharedPreferences.getString(TOKEN, null)
+        val lastSync = sharedPreferences.getLong(LASTSYNC, 0)
+
+        if (accessToken != null){
+
+            NoteRepository.getNotes(
+                accessToken,
+                lastSync,
+                success = {
+
+                    it.notes.map {NoteRepository.addNote(this, it) }
+                    sharedPreferences.edit().putLong(LASTSYNC, it.lastSync).apply()
+                    noteAdapter.updateList(NoteRepository.getNotesAll(this))
+                },
+                error = {
+                    noteAdapter.updateList(NoteRepository.getNotesAll(this))
+                    Toast.makeText(this, getString(R.string.note_sync_failed) , Toast.LENGTH_LONG).show()
+                }
+            )
+        }
     }
 
 }

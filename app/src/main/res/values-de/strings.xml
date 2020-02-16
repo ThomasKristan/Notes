@@ -9,5 +9,6 @@
     <string name="note_title">Titel</string>
     <string name="note_content">Inhalt</string>
     <string name="fill_message">Es muss zumindest ein Feld befüllt werden!</string>
-    <string name="login_info_missing_message">Benutzername und Passwort benötigt!</string>
+    <string name="login_info_missing_message">Username und Passwort sind erforderlich!</string>
+    <string name="note_sync_failed">Synchronisierung fehlgeschlagen.</string>
 </resources>
